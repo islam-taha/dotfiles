@@ -18,7 +18,7 @@ set -g LC_ALL en_US.UTF-8
 ## begin aliases ##
 alias run "g++ -std=c++11 -DDEBUG -O2"
 alias js "git st"
-alias jl "git pull upstream master"
+alias jl "git pull upstream master or git pull origin master"
 alias jc "git cb"
 alias jp "git push"
 alias ja "git checkout -- "
@@ -27,4 +27,6 @@ alias jo "git cm "
 alias jg "git checkout "
 alias merge "git merge master"
 alias jgm "git checkout master"
+alias jpm "git push origin master"
+alias jt "git pull origin master"
 ## end aliases ##
