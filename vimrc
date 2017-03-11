@@ -23,6 +23,7 @@ Plugin 'dag/vim-fish'
 Plugin 'mattn/emmet-vim'
 Plugin 'xolox/vim-session'
 Plugin 'xolox/vim-misc'
+Plugin 'justinmk/vim-syntax-extra'
 
 Plugin 'rbgrouleff/bclose.vim'
 Plugin 'bling/vim-airline'
@@ -60,8 +61,8 @@ Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'mxw/vim-jsx'
 Plugin 'kana/vim-textobj-user'
+Plugin 'maxmellon/vim-jsx-pretty'
 Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'ervandew/supertab'
 Plugin 'tpope/vim-vinegar'
@@ -347,6 +348,9 @@ let g:session_default_to_last = 0
 
 " html5
 let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.jsx"
+
+" jsx pretty
+let g:vim_jsx_pretty_colorful_config = 1
 
 " NERDTree
 nnoremap <leader>q :NERDTreeToggle<cr>
