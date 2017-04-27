@@ -1,14 +1,12 @@
 ## begin inits ##
 #
 ## rbenv init
-status --is-interactive; and . (rbenv init -|psub)
+# status --is-interactive; and . (rbenv init -|psub)
 #
 ## end inits ##
 
 ## begin exports ##
-set -gx PATH  $HOME/.rbenv/shims /usr/local/bin /usr/bin /bin /usr/sbin /sbin $GOPATH/bin
-set -gx PATH  /usr/local/opt/bison/bin /usr/local/opt/flex/bin $PATH
-set -gx PATH  $HOME/compilers/cs143/cool/bin $PATH
+set -gx PATH  $HOME/.rbenv/shims $HOME/.rbenv/bin /usr/local/bin /usr/bin /bin /usr/sbin /sbin $GOPATH/bin
 set -gx PATH  $HOME/.config/fnm/bin $PATH
 
 set -gx ARCHFLAGS "-arch x86_64"
@@ -48,13 +46,13 @@ set -gx CHATBOX_DIR $HOME/VeryCreatives/supportory_chatbox/
 
 ## begin aliases ##
 alias run "g++ -std=c++11 -DDEBUG -O2"
-alias js "git st"
+alias js "git status"
 alias jl "git pull upstream master or git pull origin master"
-alias jc "git cb"
+alias jc "git checkout -b"
 alias jp "git push"
 alias ja "git checkout -- "
 alias jd "git add"
-alias jo "git cm "
+alias jo "git commit -m "
 alias jg "git checkout "
 alias merge "git merge master"
 alias jgm "git checkout master"

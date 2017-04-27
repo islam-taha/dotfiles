@@ -71,7 +71,7 @@ Plugin 'othree/html5.vim'
 Plugin 'alvan/vim-closetag'
 Plugin 'jceb/vim-orgmode'
 Plugin 'flowtype/vim-flow'
-Plugin 'andreypopp/vim-flow-outline'
+" Plugin 'andreypopp/vim-flow-outline'
 
 
 " Colour Themes
