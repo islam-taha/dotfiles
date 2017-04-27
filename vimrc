@@ -28,7 +28,6 @@ Plugin 'justinmk/vim-syntax-extra'
 Plugin 'rbgrouleff/bclose.vim'
 Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-" Plugin 'jiangmiao/auto-pairs'
 Plugin 'cohama/lexima.vim'
 Plugin 'Lokaltog/vim-easymotion'
 
@@ -45,7 +44,6 @@ Plugin 'digitaltoad/vim-pug'
 
 
 Plugin 'godlygeek/tabular'
-" Plugin 'plasticboy/vim-markdown'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'machakann/vim-textobj-delimited'
@@ -189,6 +187,9 @@ nnoremap <leader>eN :split<cr>:e ~/Dropbox/Content/notes.md<cr>
 map gn :bn<cr>
 map gp :bp<cr>
 map gd :bd<cr>
+
+" Dash search
+" nmap <silent> <leader>d <Plug>DashSearch
 
 " UltiSnips
 let g:UltiSnipsExpandTrigger = "<c-l>"
@@ -400,7 +401,7 @@ let &t_AF="\e[38;5;%dm"
 set noeb vb t_vb=
 
 
-colorscheme gotham256
+colorscheme codedark
 set background=dark
 
 if has("gui_running")
