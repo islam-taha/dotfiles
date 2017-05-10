@@ -1,14 +1,20 @@
-## begin zstyle ##
-#
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-zstyle ':completion:*:killall:*' command 'ps -u $USER -o cmd'
-#
-## end zstyle ##
+## tmux ##
+PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -d %) "$PWD")'' ])'
+export TERM="xterm-256color"
+## end ##
 
 ## lazy load nvm ##
 export NVM_LAZY_LOAD=true
 export NVM_AUTO_USE=true
+export ALIEN_THEME="green"
 ## nvm end ##
+
+## load rbenv ##
+eval "$(rbenv init -)"
+## end ##
+## openssl ##
+export PATH="/usr/local/opt/openssl/bin:$PATH"
+## end ##
 
 # zsh options
 setopt auto_cd
@@ -17,7 +23,7 @@ setopt auto_cd
 source ~/antigen.zsh
 
 antigen use oh-my-zsh
-antigen theme lambda-mod
+antigen theme robbyrussell
 #
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions --branch=develop
@@ -53,18 +59,20 @@ export NVM_DIR="$HOME/.nvm"
 ## end exports ##
 
 ## nvm init
-. "/usr/local/opt/nvm/nvm.sh"
+#. "/usr/local/opt/nvm/nvm.sh"
 
 ## begin aliases ##
 alias run='g++ -std=c++11 -DDEBUG -O2'
-alias js="git st"
+alias js="git status"
 alias jl="git pull upstream master"
-alias jc="git cb"
+alias jc="git checkout -b"
 alias jp="git push"
 alias ja="git checkout -- "
 alias jd="git add"
-alias jo="git cm "
+alias jo="git commit -m "
 alias jg="git checkout "
 alias merge="git merge master"
 alias jgm="git checkout master"
+alias pd=‘bundle exec cap production deploy && bundle exec cap production puma:restart’
+alias sd=‘bundle exec cap staging deploy && bundle exec cap staging puma:restart’
 ## end aliases ##

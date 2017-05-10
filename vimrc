@@ -71,8 +71,6 @@ Plugin 'othree/html5.vim'
 Plugin 'alvan/vim-closetag'
 Plugin 'jceb/vim-orgmode'
 Plugin 'flowtype/vim-flow'
-" Plugin 'andreypopp/vim-flow-outline'
-
 
 " Colour Themes
 Plugin 'joshdick/onedark.vim'
@@ -348,7 +346,7 @@ let g:session_autoload = 'yes'
 let g:session_default_to_last = 0
 
 " html5
-let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.jsx"
+let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.jsx, *.erb"
 
 " jsx pretty
 let g:vim_jsx_pretty_colorful_config = 1
@@ -401,7 +399,7 @@ let &t_AF="\e[38;5;%dm"
 set noeb vb t_vb=
 
 
-colorscheme codedark
+colorscheme breezy
 set background=dark
 
 if has("gui_running")
