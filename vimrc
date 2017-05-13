@@ -19,8 +19,6 @@ Plugin 'tpope/vim-rails'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'tpope/vim-abolish'
 Plugin 'vim-ruby/vim-ruby'
-Plugin 'dag/vim-fish'
-Plugin 'mattn/emmet-vim'
 Plugin 'xolox/vim-session'
 Plugin 'xolox/vim-misc'
 Plugin 'justinmk/vim-syntax-extra'
@@ -39,19 +37,13 @@ Plugin 'janko-m/vim-test'
 
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'pangloss/vim-javascript'
-Plugin 'mustache/vim-mustache-handlebars'
-Plugin 'digitaltoad/vim-pug'
-
 
 Plugin 'godlygeek/tabular'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tomtom/tcomment_vim'
-Plugin 'machakann/vim-textobj-delimited'
-Plugin 'rizzatti/dash.vim'
 Plugin 'gorkunov/smartpairs.vim'
 
 Plugin 'vim-syntastic/syntastic'
-Plugin 'maksimr/vim-jsbeautify'
 Plugin 'SirVer/ultisnips'
 
 " Test Run
@@ -59,18 +51,14 @@ Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'kana/vim-textobj-user'
 Plugin 'maxmellon/vim-jsx-pretty'
 Plugin 'nelstrom/vim-textobj-rubyblock'
+Plugin 'kana/vim-textobj-user'
 Plugin 'ervandew/supertab'
-Plugin 'tpope/vim-vinegar'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'tmux-plugins/vim-tmux-focus-events'
-Plugin 'tpope/vim-obsession'
 Plugin 'othree/html5.vim'
 Plugin 'alvan/vim-closetag'
-Plugin 'jceb/vim-orgmode'
-Plugin 'flowtype/vim-flow'
 
 " Colour Themes
 Plugin 'joshdick/onedark.vim'
@@ -95,11 +83,12 @@ runtime macros/matchit.vim
 " =============================================================
 "                 GENERAL SETTINGS
 " =============================================================
-
+set ttyfast
+set lazyredraw
 set backspace=indent,eol,start
 set history=1000
-set ruler
-set showcmd
+" set ruler
+" set showcmd
 set autoindent
 set showmatch
 set nowrap
@@ -142,6 +131,7 @@ set ttimeoutlen=1
 set list
 set listchars=eol:¬,tab:>.,trail:~,extends:>,precedes:<,space:.
 set path+=**
+" set paste
 " =============================================================
 "                    AUTOCOMMANDS
 " =============================================================
@@ -186,24 +176,10 @@ map gn :bn<cr>
 map gp :bp<cr>
 map gd :bd<cr>
 
-" Dash search
-" nmap <silent> <leader>d <Plug>DashSearch
-
 " UltiSnips
 let g:UltiSnipsExpandTrigger = "<c-l>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
-" jsBeautify
-autocmd FileType javascript noremap <buffer>  <c-f> :call JsBeautify()<cr>
-" " for json
-autocmd FileType json noremap <buffer> <c-f> :call JsonBeautify()<cr>
-" " for jsx
-autocmd FileType jsx noremap <buffer> <c-f> :call JsxBeautify()<cr>
-" " for html
-autocmd FileType html noremap <buffer> <c-f> :call HtmlBeautify()<cr>
-" " for css or scss
-autocmd FileType css noremap <buffer> <c-f> :call CSSBeautify()
 
 " create/open file in current folder
 map <Leader>ee :e <C-R>=escape(expand("%:p:h"),' ') . '/'<CR>
@@ -248,15 +224,6 @@ nnoremap <leader>1 1gt<cr>
 nnoremap <leader>2 2gt<cr>
 nnoremap <leader>3 3gt<cr>
 nnoremap <leader>4 4gt<cr>
-
-" Rails plugin navigation
-" nnoremap <leader>gc :Econtroller
-" nnoremap <leader>gm :Emodel
-" nnoremap <leader>gv :Eview
-" nnoremap <leader>gr :Espec
-" nnoremap <leader>gj :Ejavascript
-" nnoremap <leader>gs :Eservice
-" nnoremap <leader>gi :Einitializer
 
 " inc search for range commands
 cnoremap $t <CR>:t''<CR>
@@ -362,9 +329,13 @@ omap s <Plug>(easymotion-bd-t)
 vmap s <Plug>(easymotion-bd-t)
 
 " Airline
-let g:airline#extensions#tabline#enabled = 0
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#tab_min_count = 2
+let g:airline#extensions#tabline#buffer_min_count = 2
+
+let g:Powerline_symbols = 'fancy'
 let g:airline_powerline_fonts = 1
-" let g:airline_theme='papercolor'
+let g:airline_theme='papercolor'
 
 " Markdown
 let g:markdown_fenced_languages = ['coffee', 'css', 'erb=eruby', 'javascript', 'js=javascript', 'json=javascript', 'ruby', 'sass', 'xml']
@@ -392,14 +363,9 @@ set t_Co=256
 let &t_AB="\e[48;5;%dm"
 let &t_AF="\e[38;5;%dm"
 
-" Making cursor a bar in insert mode
-" let &t_SI = "\e[6 q"
-" let &t_EI = "\e[2 q"
-"
 set noeb vb t_vb=
 
-
-colorscheme breezy
+colorscheme brogrammer
 set background=dark
 
 if has("gui_running")
@@ -451,31 +417,6 @@ function! <SID>StripTrailingWhitespaces()
     %s/\s\+$//e
     call cursor(l, c)
 endfun
-
-" set langmap=йцукенгшщзхъфывапролджэячсмитьбю;qwfpgjluy\\;[]arstdhneio'zxcvbkm\\,.
-
-" abbrevs for Star Wars
-" iabbrev dgre &#246;
-" iabbrev dred &#243;
-" iabbrev dpur &#245;
-" iabbrev dyel &#244;
-" iabbrev dfor &#247;
-" iabbrev dbla &#241;
-" iabbrev dblu &#242;
-"
-" iabbrev dlig &#248;
-" iabbrev ddar &#249;
-" iabbrev ddes &#250;
-" iabbrev dadv &#251;
-" iabbrev dfai &#253;
-" iabbrev dsuc &#255;
-" iabbrev dthr &#252;
-" iabbrev dtri &#254;
-"
-" let @y=':%s/“/"/g'
-" let @u=':%s/”/"/g'
-" let @l=':%s/’/''/g'
-" let @j=':%s/—/-/g'
 
 let @n='y:newi```pkdd:set ft=markdowngg[ Ajs'
 let @e='ggVG: w! >> ~/Dropbox/Content/notes.md:bd!'

@@ -1,3 +1,9 @@
+## please share history between sessions ##
+setopt inc_append_history
+setopt incappendhistory
+setopt share_history
+setopt sharehistory
+## end ##
 ## tmux ##
 PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -d %) "$PWD")'' ])'
 export TERM="xterm-256color"
@@ -10,7 +16,10 @@ export ALIEN_THEME="green"
 ## nvm end ##
 
 ## load rbenv ##
-eval "$(rbenv init -)"
+rbenv() {
+  eval "$(command rbenv init -)"
+  rbenv "$@"
+}
 ## end ##
 ## openssl ##
 export PATH="/usr/local/opt/openssl/bin:$PATH"
@@ -23,7 +32,7 @@ setopt auto_cd
 source ~/antigen.zsh
 
 antigen use oh-my-zsh
-antigen theme robbyrussell
+# antigen theme miloshadzic
 #
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions --branch=develop
@@ -36,6 +45,8 @@ antigen bundle command-not-found
 antigen bundle git
 antigen bundle heroku
 #
+
+source ~/powerline9k.sh
 antigen apply
 ## end antigen ##
 
