@@ -6,6 +6,7 @@ set nocompatible
 filetype off
 
 set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=/usr/local/opt/fzf
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
@@ -22,6 +23,8 @@ Plugin 'vim-ruby/vim-ruby'
 Plugin 'xolox/vim-session'
 Plugin 'xolox/vim-misc'
 Plugin 'justinmk/vim-syntax-extra'
+
+Plugin 'mileszs/ack.vim'
 
 Plugin 'rbgrouleff/bclose.vim'
 Plugin 'bling/vim-airline'
@@ -73,6 +76,8 @@ Plugin 'fneu/breezy'
 Plugin 'whatyouhide/vim-gotham'
 Plugin 'marciomazza/vim-brogrammer-theme'
 Plugin 'lifepillar/vim-wwdc16-theme'
+Plugin 'liuchengxu/space-vim-dark'
+Plugin 'cseelus/vim-colors-lucid'
 
 call vundle#end()
 filetype plugin indent on
@@ -116,7 +121,7 @@ set ignorecase
 set smartcase
 set mouse=a
 set shell=bash
-set clipboard=unnamed
+" set clipboard+=unnamed
 set winwidth=100
 set winheight=5
 set winminheight=5
@@ -131,6 +136,7 @@ set ttimeoutlen=1
 set list
 set listchars=eol:¬,tab:>.,trail:~,extends:>,precedes:<,space:.
 set path+=**
+set cursorline!
 " set paste
 " =============================================================
 "                    AUTOCOMMANDS
@@ -165,12 +171,14 @@ vnoremap <c-t> <ESC>
 
 " insert mode
 imap <c-e> <esc>A
+" imap <c-c>:call multiple_cursors#quit()<cr>:call clearmatches()<cr>
 
 " Quick open most used files
 nnoremap <leader>em :!open -a 'Marked 2.app' '%:p'<cr>
 nnoremap <leader>ev :tabnew ~/.vimrc<cr>
 nnoremap <leader>es :split<cr>:UltiSnipsEdit<cr>
 nnoremap <leader>eN :split<cr>:e ~/Dropbox/Content/notes.md<cr>
+
 
 map gn :bn<cr>
 map gp :bp<cr>
@@ -329,13 +337,13 @@ omap s <Plug>(easymotion-bd-t)
 vmap s <Plug>(easymotion-bd-t)
 
 " Airline
+let g:airline_theme='base16_codeschool'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#tab_min_count = 2
 let g:airline#extensions#tabline#buffer_min_count = 2
 
 let g:Powerline_symbols = 'fancy'
 let g:airline_powerline_fonts = 1
-let g:airline_theme='papercolor'
 
 " Markdown
 let g:markdown_fenced_languages = ['coffee', 'css', 'erb=eruby', 'javascript', 'js=javascript', 'json=javascript', 'ruby', 'sass', 'xml']
@@ -365,8 +373,8 @@ let &t_AF="\e[38;5;%dm"
 
 set noeb vb t_vb=
 
-colorscheme brogrammer
 set background=dark
+colorscheme gotham256
 
 if has("gui_running")
   set guifont=menlo\ for\ powerline:h12

@@ -6,6 +6,7 @@ setopt sharehistory
 ## end ##
 ## tmux ##
 PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -d %) "$PWD")'' ])'
+export ZSH_TMUX_AUTOSTART=true
 export TERM="xterm-256color"
 ## end ##
 
@@ -66,7 +67,7 @@ export ARCHFLAGS="-arch x86_64"
 export RAILS_ENV=development
 export PORT=5000
 
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR=$(cd ~/.nvm && pwd -P)
 ## end exports ##
 
 ## nvm init
