@@ -78,6 +78,7 @@ Plugin 'marciomazza/vim-brogrammer-theme'
 Plugin 'lifepillar/vim-wwdc16-theme'
 Plugin 'liuchengxu/space-vim-dark'
 Plugin 'cseelus/vim-colors-lucid'
+Plugin 'endel/vim-github-colorscheme'
 
 call vundle#end()
 filetype plugin indent on
@@ -135,9 +136,16 @@ set ttimeout
 set ttimeoutlen=1
 set list
 set listchars=eol:¬,tab:>.,trail:~,extends:>,precedes:<,space:.
+set shortmess+=c
+" set listchars
 set path+=**
+set synmaxcol=200
 set cursorline!
 " set paste
+" set nocursorcolumn
+" set nocursorline
+" set norelativenumber
+" syntax sync minlines=256
 " =============================================================
 "                    AUTOCOMMANDS
 " =============================================================
@@ -212,19 +220,6 @@ nnoremap <leader>f :CtrlP<cr>
 nnoremap <leader>. :CtrlPBuffer<cr>
 nnoremap <leader>p :CtrlPClearCache<cr>
 nnoremap <leader>cr :CtrlPCurWD<cr>
-" nnoremap <leader>w :CtrlP app/assets/javascripts<cr>
-" qnqremap <leader>gc :CtrlP app/controllers<cr>
-" nnoremap <leader>gv :CtrlP app/views<cr>
-" nnoremap <leader>gm :CtrlP app/models<cr>
-" nnoremap <leader>gs :CtrlP app/services<cr>
-" nnoremap <leader>gr :CtrlP spec<cr>
-" nnoremap <leader>gt :CtrlP ~/Dropbox/gollum<cr>
-" nnoremap <leader>gp :CtrlP <C-R>=expand("%:p:h") . "/"<cr><cr>
-
-" Command-T
-" nnoremap <leader>f :CommandT<cr>
-" nnoremap <leader>. :CommandTBuffer<cr>
-" nnoremap <leader>p :CommandTFlush<cr>
 
 nnoremap <leader>z :Gstatus<CR><C-w>20+
 
@@ -300,6 +295,9 @@ let g:test#javascript#mocha#options = {
 "                 PLUGINS CONFIGURATION
 " =============================================================
 
+autocmd BufWinLeave .* mkview
+autocmd BufWinEnter .* silent loadview
+
 " Syntastic
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -337,7 +335,7 @@ omap s <Plug>(easymotion-bd-t)
 vmap s <Plug>(easymotion-bd-t)
 
 " Airline
-let g:airline_theme='base16_codeschool'
+let g:airline_theme='codedark'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#tab_min_count = 2
 let g:airline#extensions#tabline#buffer_min_count = 2
@@ -374,14 +372,15 @@ let &t_AF="\e[38;5;%dm"
 set noeb vb t_vb=
 
 set background=dark
-colorscheme gotham256
+colorscheme codedark
 
 if has("gui_running")
-  set guifont=menlo\ for\ powerline:h12
+  set guifont=monaco\ for\ powerline:h12
   set linespace=2
   set guioptions-=r
   set guioptions-=L
-  set lines=53 columns=216
+  set lines=46 columns=224
+  set guicursor=n-v-c-i:block-Cursor
 endif
 
 " =============================================================

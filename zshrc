@@ -47,7 +47,13 @@ antigen bundle git
 antigen bundle heroku
 #
 
-source ~/powerline9k.sh
+## don't use powerline9k inside emacs ##
+if [ -n "$INSIDE_EMACS" ]; then
+  antigen theme miloshadzic
+else
+  source ~/powerline9k.sh
+fi
+
 antigen apply
 ## end antigen ##
 
@@ -85,6 +91,6 @@ alias jo="git commit -m "
 alias jg="git checkout "
 alias merge="git merge master"
 alias jgm="git checkout master"
-alias pd=‘bundle exec cap production deploy && bundle exec cap production puma:restart’
-alias sd=‘bundle exec cap staging deploy && bundle exec cap staging puma:restart’
+alias pd="bundle exec cap production deploy && bundle exec cap production puma:restart"
+alias sd="bundle exec cap staging deploy && bundle exec cap staging puma:restart"
 ## end aliases ##
