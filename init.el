@@ -39,9 +39,6 @@
 (tool-bar-mode -1)
 (global-linum-mode t)
 
-;; auto close pairs
-(electric-pair-mode)
-
 ;; delete trailing whitespaces on saving
 (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
@@ -74,13 +71,50 @@
 (help-at-pt-set-timer)
 
 ;; spaceline configs
-(require 'spaceline-all-the-icons)
-(spaceline-all-the-icons-theme)
-(spaceline-all-the-icons--setup-anzu)
-(spaceline-all-the-icons--setup-git-ahead)
-(spaceline-all-the-icons--setup-neotree)
+(setq-default winum-keymap
+              (let ((map (make-sparse-keymap)))
+                (define-key map (kbd "C-`") 'winum-select-window-by-number)
+                (define-key map (kbd "C-²") 'winum-select-window-by-number)
+                (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
+                (define-key map (kbd "M-1") 'winum-select-window-1)
+                (define-key map (kbd "M-2") 'winum-select-window-2)
+                (define-key map (kbd "M-3") 'winum-select-window-3)
+                (define-key map (kbd "M-4") 'winum-select-window-4)
+                (define-key map (kbd "M-5") 'winum-select-window-5)
+                (define-key map (kbd "M-6") 'winum-select-window-6)
+                (define-key map (kbd "M-7") 'winum-select-window-7)
+                (define-key map (kbd "M-8") 'winum-select-window-8)
+                map))
+
+(require 'fancy-battery)
+(require 'winum)
+(require 'spaceline-config)
+(spaceline-helm-mode 1)
+(spaceline-emacs-theme)
+
+(setq-default
+ powerline-height 18
+ powerline-default-separator 'wave
+ spaceline-flycheck-bullet "❖ %s"
+ spaceline-separator-dir-left '(right . right)
+ spaceline-separator-dir-right '(left . left))
+
+(add-hook 'after-init-hook #'fancy-battery-mode)
+(add-hook 'after-init-hook #'winum-mode)
+
+;; use system shell path
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+
+(setenv "PATH" (concat (getenv "PATH") ":/Users/tensor/.nvm/versions/node/v6.10.2/bin"))
+    (setq exec-path (append exec-path '("/Users/tensor/.nvm/versions/node/v6.10.2/bin")))
 
 ;;; Ruby configs
+;; rspec
+(require 'rspec-mode)
+(setq rspec-use-bundler-when-possible t)
+(setq rspec-use-spring-when-possible nil)
+
 ;; rubocop init
 (require 'rubocop)
 (add-hook 'ruby-mode-hook #'rubocop-mode)
@@ -90,6 +124,33 @@
 (require 'pry)
 (require 'inf-ruby)
 (setenv "PAGER" (executable-find "cat"))
+
+;; smart parenthesis
+(require 'smartparens-config)
+(add-hook 'js-mode-hook #'smartparens-mode)
+(add-hook 'ruby-mode-hook #'smartparens-mode)
+(add-hook 'js2-mode-hook #'smartparens-mode)
+(add-hook 'web-mode-hook #'smartparens-mode)
+
+;;; js2-mode
+(require 'js2-mode)
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.sjs$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.es6$" . js2-mode))
+(setq js2-allow-rhino-new-expr-initializer nil)
+(setq js2-enter-indents-newline t)
+(setq js2-global-externs '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON"))
+(setq js2-idle-timer-delay 0.1)
+(setq js2-indent-on-enter-key nil)
+(setq js2-mirror-mode nil)
+(setq js2-strict-inconsistent-return-warning nil)
+(setq js2-auto-indent-p t)
+(setq js2-include-rhino-externs nil)
+(setq js2-include-gears-externs nil)
+(setq js2-concat-multiline-strings 'eol)
+(setq js2-rebind-eol-bol-keys nil)
+(setq js2-mode-show-parse-errors t)
+(setq js2-mode-show-strict-warnings nil)
 
 ;;; web mode
 ;; Code
@@ -101,6 +162,31 @@
 
 ;; Hooks
 (add-hook 'html-mode-hook 'web-mode)
+(setq web-mode-content-types-alist
+      '(("jsx" . "\\.js[x]?\\'")))
+
+(add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
+
+(defun my-web-mode-hook ()
+  "Hooks for Web mode, Adjust indent."
+  ;;; http://web-mode.org/
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2))
+
+(defadvice web-mode-highlight-part (around tweak-jsx activate)
+  "Adjust jsx highlighting."
+  (if (equal web-mode-content-type "jsx")
+      (let ((web-mode-enable-part-face nil))
+        ad-do-it)
+    ad-do-it))
+
+(add-hook 'web-mode-hook
+          (lambda ()
+            (web-mode-set-content-type "jsx")
+            (message "now set to: %s" web-mode-content-type)))
+
+(add-hook 'web-mode-hook  'my-web-mode-hook)
 ;;; end web mode
 
 ;;; yasnippet
@@ -108,13 +194,46 @@
 (require 'react-snippets)
 (yas-global-mode 1)
 
+
 ;;; flycheck
 (require 'flycheck)
-(global-flycheck-mode)
 (add-hook 'c++-mode-hook 'flycheck-mode)
 (add-hook 'c-mode-hook 'flycheck-mode)
-(eval-after-load 'flycheck
-  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+
+;; turn on flychecking globally
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(setq-default flycheck-disabled-checkers
+              (append flycheck-disabled-checkers
+                      '(javascript-jshint)))
+(flycheck-add-mode 'javascript-eslint 'web-mode)
+(setq-default flycheck-temp-prefix ".flycheck")
+(setq-default flycheck-disabled-checkers
+              (append flycheck-disabled-checkers
+                      '(json-jsonlist)))
+
+;; use local node modules
+(defun my/use-eslint-from-node-modules ()
+  "Use local node modules."
+  (let* ((root (locate-dominating-file
+                (or (buffer-file-name) default-directory)
+                "node_modules"))
+         (eslint (and root
+                      (expand-file-name "node_modules/eslint/bin/eslint.js"
+                                        root))))
+    (when (and eslint (file-executable-p eslint))
+      (setq-local flycheck-javascript-eslint-executable eslint))))
+(add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
+
+(defun myJSXHook ()
+  "My Hook for JSX Files."
+  (interactive)
+  (web-mode)
+  (web-mode-set-content-type "jsx")
+  (flycheck-select-checker 'javascript-eslint)
+  (flycheck-mode)
+  (tern-mode t))
+
+(add-to-list 'magic-mode-alist '("import " . myJSXHook) )
 
 ;;; helm stuff
 ;; Code:
@@ -142,11 +261,14 @@
       helm-flx-for-helm-locate t)
 
 (setq helm-projectile-fuzzy-match nil)
-(setq projectile-enable-caching nil)
+(setq projectile-enable-caching t)
 (setq projectile-switch-project-action 'projectile-dired)
 (setq projectile-completion-system 'helm)
 (setq projectile-switch-project-action 'helm-projectile)
 (setq projectile-require-project-root t)
+(setq projectile-indexing-method 'alien)
+(setq helm-recentf-fuzzy-match t)
+(setq helm-buffers-fuzzy-match t)
 
 (setq helm-swoop-split-with-multiple-windows nil)
 (setq helm-swoop-split-direction 'split-window-horizontally)
@@ -164,16 +286,32 @@
 (global-set-key (kbd "C-x C-k") 'helm-show-kill-ring)
 (global-set-key (kbd "C-x p i") 'helm-package)
 (global-set-key (kbd "C-c f") 'helm-swoop)
-(global-set-key (kbd "C-c e f") 'helm-swoop--edit)
+(global-set-key (kbd "C-c r") 'helm-recentf)
 
 ;;; end helm
 
+;;; tern mode
+(require 'tern)
+(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+
 ;;; Company configs:
 (require 'company)
-(setq global-company-mode t)
+
+(setq global-company-mode +1)
+(add-hook 'after-init-hook 'global-company-mode)
+
+(setq company-backends
+      '((company-files
+         company-keywords
+         company-css
+         company-yasnippet)))
+
 (setq company-quickhelp-mode 1)
-(setq company-idle-delay 0.1)
+(setq company-idle-delay 0)
 (setq company-minimum-prefix-length 1)
+(setq company-auto-complete 'company-explicit-action-p)
+(setq company-auto-select-first-candidate nil)
+(setq company-selection-wrap-around t)
 
 (setq-default company-dabbrev-downcase nil)
 (setq-default company-quickhelp-delay 1)
@@ -181,26 +319,68 @@
 (with-eval-after-load 'company
   (define-key company-active-map (kbd "C-n") #'company-select-next)
   (define-key company-active-map (kbd "C-p") #'company-select-previous)
-  (define-key company-active-map (kbd "<tab>") #'company-complete))
+  (define-key company-active-map (kbd "<tab>") 'company-complete)
+  (define-key company-active-map (kbd "TAB") 'company-complete))
 
 (with-eval-after-load 'company
-  (add-hook 'company-mode-hook (lambda ()
-                                 (add-to-list 'company-backends 'company-capf)))
   (company-flx-mode +1))
 
-(add-to-list 'company-backends 'company-tern)
-(add-to-list 'company-backends 'company-yasnippet t)
-;; emacs-ycmd
-(require 'ycmd)
-(require 'company-ycmd)
+(setq company-flx-limit 5)
 
-;;; Code:
-(add-hook 'after-init-hook #'global-ycmd-mode)
-(set-variable 'ycmd-server-command '("python" "-u" "/Users/tensor/ycmd/ycmd"))
-(set-variable 'ycmd-startup-timeout 1000)
+(defvar company-mode/enable-yas t
+  "Enable yasnippet for all backends.")
 
-;;; Code:
-(company-ycmd-setup)
+(defun company-mode/backend-with-yas (backend)
+  "Add yassnippet BACKEND."
+  (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+      backend
+    (append (if (consp backend) backend (list backend))
+            '(:with company-yasnippet))))
+
+(setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+
+;; set default `company-backends'
+(dolist (hook '(js-mode-hook
+                js2-mode-hook
+                js3-mode-hook
+                inferior-js-mode-hook))
+  (add-hook hook
+            (lambda ()
+              (tern-mode t)
+              (add-to-list (make-local-variable 'company-backends) 'company-tern))))
+
+(add-hook 'ruby-mode-hook
+          (lambda()
+            (add-to-list (make-local-variable 'company-backends) 'company-robe)))
+
+(defun my-robe-mode-hook ()
+  "Enable company capf."
+    (set (make-local-variable 'company-backends)
+         '((company-capf company-dabbrev-code)))
+    (company-quickhelp-mode 0))
+
+(add-hook 'ruby-mode-hook 'my-robe-mode-hook)
+;; (company-abbrev company-dabbrev)
+
+;; Enable CSS completion between <style>...</style>
+(defadvice company-css (before web-mode-set-up-ac-sources activate)
+  "Set CSS completion based on current language before running `company-css'."
+  (if (equal major-mode 'web-mode)
+      (let ((web-mode-cur-language (web-mode-language-at-pos)))
+        (if (string= web-mode-cur-language "css")
+            (unless css-mode (css-mode))))))
+
+;; Enable JavaScript completion between <script>...</script> etc.
+(defadvice company-tern (before web-mode-set-up-ac-sources activate)
+  "Set `tern-mode' based on current language before running `company-tern'."
+  (if (equal major-mode 'web-mode)
+      (let ((web-mode-cur-language (web-mode-language-at-pos)))
+        (if (or (string= web-mode-cur-language "javascript")
+                (string= web-mode-cur-language "jsx"))
+            (unless tern-mode (tern-mode))
+          ;; (if tern-mode (tern-mode))
+          ))))
+
 
 ;; auto compile
 (require 'auto-compile)
@@ -240,7 +420,6 @@
 
 ;; multi terminals
 (require 'multi-term)
-(global-set-key (kbd "C-x C-m") 'multi-term)
 (add-hook 'term-mode-hook
           (lambda ()
             (setq term-buffer-maximum-size 10000)
@@ -279,31 +458,10 @@
 
 ;; c/c++ configs + irony
 (require 'cc-mode)
-(require 'company-irony-c-headers)
 
 (cmake-ide-setup)
 
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-hook 'c-mode-hook 'irony-mode)
-
-(defun my-irony-mode-hook ()
-  "Irony hook."
-  (define-key irony-mode-map [remap completion-at-point]
-    'irony-completion-at-point-async)
-  (define-key irony-mode-map [remap complete-symbol]
-    'irony-completion-at-point-async))
-
-(add-hook 'irony-mode-hook 'my-irony-mode-hook)
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-
-(add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
-
-(setq company-backends (delete 'company-semantic company-backends))
 (setq cmake-ide-build-dir "bin")
-
-(eval-after-load 'company
-  '(add-to-list
-    'company-backends '(company-irony-c-headers company-irony)))
 
 (font-lock-add-keywords 'c++-mode
                         '(("\\(\\w+\\)\\s-*\("
@@ -312,7 +470,6 @@
                         '(("\\(\\w+\\)\\s-*\("
                            (1 font-lock-builtin-face))) t)
 
-(define-key c++-mode-map (kbd "C-c c") 'company-irony)
 
 ;; clang format
 (require 'clang-format)
@@ -323,6 +480,8 @@
 
 ;; iedit
 (require 'iedit)
+(setq iedit-unmatched-lines-invisible-default t)
+
 (define-key global-map (kbd "C-c ;") 'iedit-mode)
 
 ;;; MAPPINGS: to built-in functions
@@ -341,7 +500,7 @@
 (defun select-current-line ()
   "Select the current line."
   (interactive)
-  (end-of-line) ; move to end of line
+  (end-of-line)
   (set-mark (line-beginning-position)))
 
 (defun run-compile-current-file ()
