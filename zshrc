@@ -79,6 +79,11 @@ export NVM_DIR=$(cd ~/.nvm && pwd -P)
 ## nvm init
 #. "/usr/local/opt/nvm/nvm.sh"
 
+## setup default nvm alias if inside vim
+if [ -n "$VIMRUNTIME" ]; then
+  nvm alias default 6.10.2
+fi
+
 ## begin aliases ##
 alias run='g++ -std=c++11 -DDEBUG -O2'
 alias js="git status"
@@ -93,4 +98,9 @@ alias merge="git merge master"
 alias jgm="git checkout master"
 alias pd="bundle exec cap production deploy && bundle exec cap production puma:restart"
 alias sd="bundle exec cap staging deploy && bundle exec cap staging puma:restart"
+alias be="bundle exec"
 ## end aliases ##
+
+## begin custom scrips ##
+source ~/.sup_env
+## end ##

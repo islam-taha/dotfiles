@@ -1,6 +1,6 @@
 ;;; init-packages --- Summary
 ;;; Commentary:
-;;; Code
+;;; Code:
 (package-initialize)
 (set 'ad-redefinition-action 'accept)
 (setq package-enable-at-startup nil)
@@ -38,6 +38,8 @@
 (show-paren-mode t)
 (tool-bar-mode -1)
 (global-linum-mode t)
+(global-hl-line-mode 1)
+
 
 ;; delete trailing whitespaces on saving
 (add-to-list 'write-file-functions 'delete-trailing-whitespace)
@@ -107,7 +109,7 @@
   (exec-path-from-shell-initialize))
 
 (setenv "PATH" (concat (getenv "PATH") ":/Users/tensor/.nvm/versions/node/v6.10.2/bin"))
-    (setq exec-path (append exec-path '("/Users/tensor/.nvm/versions/node/v6.10.2/bin")))
+(setq exec-path (append exec-path '("/Users/tensor/.nvm/versions/node/v6.10.2/bin")))
 
 ;;; Ruby configs
 ;; rspec
@@ -291,20 +293,14 @@
 ;;; end helm
 
 ;;; tern mode
-(require 'tern)
-(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+;; (require 'tern)
+;; (add-hook 'js-mode-hook (lambda () (tern-mode t)))
 
 ;;; Company configs:
 (require 'company)
 
 (setq global-company-mode +1)
 (add-hook 'after-init-hook 'global-company-mode)
-
-(setq company-backends
-      '((company-files
-         company-keywords
-         company-css
-         company-yasnippet)))
 
 (setq company-quickhelp-mode 1)
 (setq company-idle-delay 0)
@@ -322,10 +318,14 @@
   (define-key company-active-map (kbd "<tab>") 'company-complete)
   (define-key company-active-map (kbd "TAB") 'company-complete))
 
-(with-eval-after-load 'company
-  (company-flx-mode +1))
 
-(setq company-flx-limit 5)
+;; emacs-ycmd
+(require 'ycmd)
+(require 'company-ycmd)
+(add-hook 'after-init-hook #'global-ycmd-mode)
+(set-variable 'ycmd-server-command '("python" "-u" "/Users/tensor/ycmd/ycmd"))
+
+(company-ycmd-setup)
 
 (defvar company-mode/enable-yas t
   "Enable yasnippet for all backends.")
@@ -343,44 +343,12 @@
 (dolist (hook '(js-mode-hook
                 js2-mode-hook
                 js3-mode-hook
+                web-mode-hook
                 inferior-js-mode-hook))
   (add-hook hook
             (lambda ()
               (tern-mode t)
               (add-to-list (make-local-variable 'company-backends) 'company-tern))))
-
-(add-hook 'ruby-mode-hook
-          (lambda()
-            (add-to-list (make-local-variable 'company-backends) 'company-robe)))
-
-(defun my-robe-mode-hook ()
-  "Enable company capf."
-    (set (make-local-variable 'company-backends)
-         '((company-capf company-dabbrev-code)))
-    (company-quickhelp-mode 0))
-
-(add-hook 'ruby-mode-hook 'my-robe-mode-hook)
-;; (company-abbrev company-dabbrev)
-
-;; Enable CSS completion between <style>...</style>
-(defadvice company-css (before web-mode-set-up-ac-sources activate)
-  "Set CSS completion based on current language before running `company-css'."
-  (if (equal major-mode 'web-mode)
-      (let ((web-mode-cur-language (web-mode-language-at-pos)))
-        (if (string= web-mode-cur-language "css")
-            (unless css-mode (css-mode))))))
-
-;; Enable JavaScript completion between <script>...</script> etc.
-(defadvice company-tern (before web-mode-set-up-ac-sources activate)
-  "Set `tern-mode' based on current language before running `company-tern'."
-  (if (equal major-mode 'web-mode)
-      (let ((web-mode-cur-language (web-mode-language-at-pos)))
-        (if (or (string= web-mode-cur-language "javascript")
-                (string= web-mode-cur-language "jsx"))
-            (unless tern-mode (tern-mode))
-          ;; (if tern-mode (tern-mode))
-          ))))
-
 
 ;; auto compile
 (require 'auto-compile)
@@ -401,6 +369,7 @@
 ;; neotree
 (require 'neotree)
 (global-set-key (kbd "C-x C-;") 'neotree-toggle)
+(setq neo-window-fixed-size nil)
 (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 
 ;; shackle
@@ -526,6 +495,19 @@
   "Update installed packages in my file."
   (with-temp-file "/Users/tensor/.dotfiles/packages" (insert (format "%S" package-activated-list))))
 
+(defun my-kill-thing-at-point (thing)
+  "Kill the `thing-at-point' for the specified kind of THING."
+  (let ((bounds (bounds-of-thing-at-point thing)))
+    (if bounds
+        (kill-region (car bounds) (cdr bounds))
+      (error "No %s at point" thing))))
+
+(defun my-kill-word-at-point ()
+  "Kill the word at point."
+  (interactive)
+  (my-kill-thing-at-point 'word))
+
+(global-set-key (kbd "C-c d w") 'my-kill-word-at-point)
 (global-set-key (kbd "M-t") 'select-current-line)
 (global-set-key (kbd "M-r") 'run-compile-current-file)
 (global-set-key (kbd "M-b") 'compile-current-file)

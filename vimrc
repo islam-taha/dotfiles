@@ -1,4 +1,4 @@
-
+"
 "                      VUNDLE
 " =============================================================
 
@@ -8,81 +8,44 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 set rtp+=/usr/local/opt/fzf
 call vundle#begin()
+
 Plugin 'VundleVim/Vundle.vim'
-
-Plugin 'tpope/vim-endwise'
-Plugin 'tpope/vim-eunuch'
-Plugin 'tpope/vim-ragtag'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-rails'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'tpope/vim-abolish'
-Plugin 'vim-ruby/vim-ruby'
-Plugin 'xolox/vim-session'
-Plugin 'xolox/vim-misc'
-Plugin 'justinmk/vim-syntax-extra'
-
-Plugin 'mileszs/ack.vim'
-
-Plugin 'rbgrouleff/bclose.vim'
-Plugin 'bling/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'cohama/lexima.vim'
-Plugin 'Lokaltog/vim-easymotion'
-
-Plugin 'hlissner/vim-multiedit'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'islam-taha/vim-react-es6-snippets'
-
-Plugin 'janko-m/vim-test'
-
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'pangloss/vim-javascript'
-
-Plugin 'godlygeek/tabular'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'tomtom/tcomment_vim'
-Plugin 'gorkunov/smartpairs.vim'
-
-Plugin 'vim-syntastic/syntastic'
-Plugin 'SirVer/ultisnips'
-
-" Test Run
-Plugin 'AndrewRadev/splitjoin.vim'
-Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'maxmellon/vim-jsx-pretty'
-Plugin 'nelstrom/vim-textobj-rubyblock'
-Plugin 'kana/vim-textobj-user'
-Plugin 'ervandew/supertab'
+Plugin 'shime/vim-livedown'
+Plugin 'ngmy/vim-rubocop'
+Plugin 'tpope/vim-fugitive'
+Plugin 'plasticboy/vim-markdown'
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'tmux-plugins/vim-tmux-focus-events'
-Plugin 'othree/html5.vim'
-Plugin 'alvan/vim-closetag'
-
-" Colour Themes
-Plugin 'joshdick/onedark.vim'
+Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'mileszs/ack.vim'
+Plugin 'sjl/gundo.vim'
+Plugin 'qpkorr/vim-bufkill'
+Plugin 'sheerun/vim-polyglot'
 Plugin 'dracula/vim'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'gosukiwi/vim-atom-dark'
-Plugin 'GertjanReynaert/cobalt2-vim-theme'
-Plugin 'trevordmiller/nova-vim'
-Plugin 'kristijanhusak/vim-hybrid-material'
+Plugin 'leafgarland/typescript-vim'
+Plugin 'Valloric/MatchTagAlways'
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'tomtom/tcomment_vim'
 Plugin 'islam-taha/vim-code-dark'
-Plugin 'fneu/breezy'
-Plugin 'whatyouhide/vim-gotham'
-Plugin 'marciomazza/vim-brogrammer-theme'
-Plugin 'lifepillar/vim-wwdc16-theme'
-Plugin 'liuchengxu/space-vim-dark'
-Plugin 'cseelus/vim-colors-lucid'
-Plugin 'endel/vim-github-colorscheme'
+Plugin 'islam-taha/vim-react-es6-snippets'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'w0rp/ale'
 
 call vundle#end()
 filetype plugin indent on
-syntax on
+
+if &t_Co >= 256 || has("gui_running")
+    colorscheme codedark
+endif
+
+if &t_Co > 2 || has("gui_running")
+    " switch syntax highlighting on, when the terminal has colors
+    syntax on
+endif
 
 runtime macros/matchit.vim
 
@@ -135,7 +98,7 @@ set noesckeys
 set ttimeout
 set ttimeoutlen=1
 set list
-set listchars=eol:¬,tab:>.,trail:~,extends:>,precedes:<,space:.
+set listchars=eol:¬,tab:>.,trail:~,extends:>,precedes:<
 set shortmess+=c
 " set listchars
 set path+=**
@@ -187,10 +150,32 @@ nnoremap <leader>ev :tabnew ~/.vimrc<cr>
 nnoremap <leader>es :split<cr>:UltiSnipsEdit<cr>
 nnoremap <leader>eN :split<cr>:e ~/Dropbox/Content/notes.md<cr>
 
+function! MapCR()
+  nnoremap <cr> :nohlsearch<cr>:call clearmatches()<cr>
+endfunction
+call MapCR()
+
+augroup highlight
+  " Remove ALL autocommands for the current group.
+  autocmd!
+
+  " Leave the return key alone when in quickfix windows, since it's used
+  " to run commands there.
+  autocmd BufEnter * :if &buftype is# "quickfix" | :unmap <cr>| else | :call MapCR()| endif
+
+  " Leave the return key alone when in command line windows, since it's used
+  " to run commands there.
+  autocmd CmdwinEnter * :unmap <cr>
+  autocmd CmdwinLeave * :call MapCR()
+
+  " Highlight characters longer than 100 characters
+  autocmd BufEnter * highlight OverLength ctermbg=darkgrey guibg=#111111
+  autocmd BufEnter * match OverLength /\%>100v.\+/
+augroup END
 
 map gn :bn<cr>
 map gp :bp<cr>
-map gd :bd<cr>
+map <s-w> :BD<cr>
 
 " UltiSnips
 let g:UltiSnipsExpandTrigger = "<c-l>"
@@ -328,6 +313,7 @@ let g:vim_jsx_pretty_colorful_config = 1
 nnoremap <leader>q :NERDTreeToggle<cr>
 let NERDTreeMinimalUI=1
 let NERDTreeShowLineNumbers=1
+let NERDTreeShowHidden=1
 
 " Easymotion
 nmap s <Plug>(easymotion-s)
@@ -343,6 +329,16 @@ let g:airline#extensions#tabline#buffer_min_count = 2
 let g:Powerline_symbols = 'fancy'
 let g:airline_powerline_fonts = 1
 
+" Multiple cursors setup
+let g:multi_cursor_use_default_mapping=0
+" Default mapping
+let g:multi_cursor_next_key='<C-n>'
+let g:multi_cursor_prev_key='<C-p>'
+let g:multi_cursor_skip_key='<C-x>'
+let g:multi_cursor_quit_key='<Esc>'
+" Map start key separately from next key
+let g:multi_cursor_start_key='<F6>'
+
 " Markdown
 let g:markdown_fenced_languages = ['coffee', 'css', 'erb=eruby', 'javascript', 'js=javascript', 'json=javascript', 'ruby', 'sass', 'xml']
 
@@ -355,11 +351,30 @@ let g:jsx_ext_required = 0
 let g:javascript_enable_domhtmlcss = 1
 let g:used_javascript_libs = 'underscore,react,chai'
 
+" match tags always
+let g:mta_filetypes = {
+    \ 'html' : 1,
+    \ 'xhtml' : 1,
+    \ 'eruby' : 1,
+    \ 'javascript.jsx' : 1,
+    \}
+
 " YouCompleteMe
 " remove markdown files from black list
 let g:ycm_filetype_blacklist={'notes': 1, 'unite': 1, 'tagbar': 1, 'pandoc': 1, 'qf': 1, 'vimwiki': 1, 'text': 1, 'infolog': 1, 'mail': 1}
 let g:ycm_path_to_python_interpreter = '/usr/bin/python'
 
+" Put this in vimrc or a plugin file of your own.
+" After this is configured, :ALEFix will try and fix your JS code with ESLint.
+let g:ale_fixers = {
+\   'javascript': ['eslint'],
+\   'ruby': ['rubocop'],
+\}
+
+" Set this setting in vimrc if you want to fix files automatically on save.
+" This is off by default.
+let g:ale_fix_on_save = 0
+let g:ale_completion_enabled = 1
 " =============================================================
 "                      APPEARENCE
 " =============================================================
@@ -375,12 +390,10 @@ set background=dark
 colorscheme codedark
 
 if has("gui_running")
-  set guifont=monaco\ for\ powerline:h12
+  set guifont=SourceCodePro+Powerline+Awesome\ Regular:h12
   set linespace=2
   set guioptions-=r
   set guioptions-=L
-  set lines=46 columns=224
-  set guicursor=n-v-c-i:block-Cursor
 endif
 
 " =============================================================
