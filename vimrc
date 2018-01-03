@@ -25,6 +25,7 @@ Plugin 'sjl/gundo.vim'
 Plugin 'qpkorr/vim-bufkill'
 Plugin 'sheerun/vim-polyglot'
 Plugin 'dracula/vim'
+Plugin 'tomasr/dracula'
 Plugin 'leafgarland/typescript-vim'
 Plugin 'Valloric/MatchTagAlways'
 Plugin 'jiangmiao/auto-pairs'
@@ -38,7 +39,11 @@ Plugin 'w0rp/ale'
 call vundle#end()
 filetype plugin indent on
 
-if &t_Co >= 256 || has("gui_running")
+if &t_Co >= 256
+  colorscheme dracula
+endif
+
+if has("gui_running")
     colorscheme codedark
 endif
 
@@ -56,8 +61,8 @@ set ttyfast
 set lazyredraw
 set backspace=indent,eol,start
 set history=1000
-" set ruler
-" set showcmd
+set ruler
+set showcmd
 set autoindent
 set showmatch
 set nowrap
@@ -75,7 +80,7 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set expandtab
-set relativenumber
+" set relativenumber
 set number
 set wrap
 set linebreak
@@ -85,7 +90,7 @@ set ignorecase
 set smartcase
 set mouse=a
 set shell=bash
-" set clipboard+=unnamed
+set clipboard+=unnamed
 set winwidth=100
 set winheight=5
 set winminheight=5
@@ -99,16 +104,15 @@ set ttimeout
 set ttimeoutlen=1
 set list
 set listchars=eol:¬,tab:>.,trail:~,extends:>,precedes:<
-set shortmess+=c
-" set listchars
+set shortmess+=T
+" set cmdheight=2
+set listchars
 set path+=**
 set synmaxcol=200
-set cursorline!
+set nocursorline
 " set paste
-" set nocursorcolumn
-" set nocursorline
-" set norelativenumber
-" syntax sync minlines=256
+set nocursorcolumn
+syntax sync minlines=256
 " =============================================================
 "                    AUTOCOMMANDS
 " =============================================================
@@ -155,24 +159,24 @@ function! MapCR()
 endfunction
 call MapCR()
 
-augroup highlight
-  " Remove ALL autocommands for the current group.
-  autocmd!
-
-  " Leave the return key alone when in quickfix windows, since it's used
-  " to run commands there.
-  autocmd BufEnter * :if &buftype is# "quickfix" | :unmap <cr>| else | :call MapCR()| endif
-
-  " Leave the return key alone when in command line windows, since it's used
-  " to run commands there.
-  autocmd CmdwinEnter * :unmap <cr>
-  autocmd CmdwinLeave * :call MapCR()
-
-  " Highlight characters longer than 100 characters
-  autocmd BufEnter * highlight OverLength ctermbg=darkgrey guibg=#111111
-  autocmd BufEnter * match OverLength /\%>100v.\+/
-augroup END
-
+" augroup highlight
+"   " Remove ALL autocommands for the current group.
+"   autocmd!
+"
+"   " Leave the return key alone when in quickfix windows, since it's used
+"   " to run commands there.
+"   autocmd BufEnter * :if &buftype is# "quickfix" | :unmap <cr>| else | :call MapCR()| endif
+"
+"   " Leave the return key alone when in command line windows, since it's used
+"   " to run commands there.
+"   autocmd CmdwinEnter * :unmap <cr>
+"   autocmd CmdwinLeave * :call MapCR()
+"
+"   " Highlight characters longer than 100 characters
+"   autocmd BufEnter * highlight OverLength ctermbg=darkgrey guibg=#111111
+"   autocmd BufEnter * match OverLength /\%>100v.\+/
+" augroup END
+"
 map gn :bn<cr>
 map gp :bp<cr>
 map <s-w> :BD<cr>
@@ -280,8 +284,8 @@ let g:test#javascript#mocha#options = {
 "                 PLUGINS CONFIGURATION
 " =============================================================
 
-autocmd BufWinLeave .* mkview
-autocmd BufWinEnter .* silent loadview
+" autocmd BufWinLeave .* mkview
+" autocmd BufWinEnter .* silent loadview
 
 " Syntastic
 set statusline+=%#warningmsg#
@@ -312,7 +316,7 @@ let g:vim_jsx_pretty_colorful_config = 1
 " NERDTree
 nnoremap <leader>q :NERDTreeToggle<cr>
 let NERDTreeMinimalUI=1
-let NERDTreeShowLineNumbers=1
+let NERDTreeShowLineNumbers=0
 let NERDTreeShowHidden=1
 
 " Easymotion
@@ -321,7 +325,13 @@ omap s <Plug>(easymotion-bd-t)
 vmap s <Plug>(easymotion-bd-t)
 
 " Airline
-let g:airline_theme='codedark'
+
+if has('gui_running')
+  let g:airline_theme = 'codedark'
+else
+  let g:airline_theme='dracula'
+endif
+
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#tab_min_count = 2
 let g:airline#extensions#tabline#buffer_min_count = 2
@@ -330,7 +340,7 @@ let g:Powerline_symbols = 'fancy'
 let g:airline_powerline_fonts = 1
 
 " Multiple cursors setup
-let g:multi_cursor_use_default_mapping=0
+let g:multi_cursor_use_default_mapping=1
 " Default mapping
 let g:multi_cursor_next_key='<C-n>'
 let g:multi_cursor_prev_key='<C-p>'
@@ -373,6 +383,8 @@ let g:ale_fixers = {
 
 " Set this setting in vimrc if you want to fix files automatically on save.
 " This is off by default.
+let g:ale_sign_warning = '▲'
+let g:ale_sign_error = '✗'
 let g:ale_fix_on_save = 0
 let g:ale_completion_enabled = 1
 " =============================================================
@@ -387,7 +399,6 @@ let &t_AF="\e[38;5;%dm"
 set noeb vb t_vb=
 
 set background=dark
-colorscheme codedark
 
 if has("gui_running")
   set guifont=SourceCodePro+Powerline+Awesome\ Regular:h12

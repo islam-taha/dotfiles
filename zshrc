@@ -51,7 +51,8 @@ antigen bundle heroku
 if [ -n "$INSIDE_EMACS" ]; then
   antigen theme miloshadzic
 else
-  source ~/powerline9k.sh
+  antigen theme miloshadzic
+  # source ~/powerline9k.sh
 fi
 
 antigen apply
@@ -87,17 +88,20 @@ fi
 ## begin aliases ##
 alias run='g++ -std=c++11 -DDEBUG -O2'
 alias js="git status"
-alias jl="git pull upstream master"
+alias jl="git pull origin $(git rev-parse --abbrev-ref HEAD)"
 alias jc="git checkout -b"
 alias jp="git push"
 alias ja="git checkout -- "
 alias jd="git add"
 alias jo="git commit -m "
 alias jg="git checkout "
+alias jm="git merge --no-ff"
+alias jgd="git checkout develop"
+alias jgs="git checkout staging"
 alias merge="git merge master"
 alias jgm="git checkout master"
-alias pd="bundle exec cap production deploy && bundle exec cap production puma:restart"
-alias sd="bundle exec cap staging deploy && bundle exec cap staging puma:restart"
+alias pd="bundle exec cap production deploy && bundle exec cap staging puma:stop && bundle exec cap staging puma:start"
+alias sd="bundle exec cap staging deploy && bundle exec cap staging puma:stop && bundle exec cap staging puma:start"
 alias be="bundle exec"
 ## end aliases ##
 
