@@ -15,6 +15,7 @@ Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'shime/vim-livedown'
 Plugin 'ngmy/vim-rubocop'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-endwise'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'bling/vim-airline'
@@ -25,15 +26,12 @@ Plugin 'sjl/gundo.vim'
 Plugin 'qpkorr/vim-bufkill'
 Plugin 'sheerun/vim-polyglot'
 Plugin 'dracula/vim'
-Plugin 'tomasr/dracula'
 Plugin 'leafgarland/typescript-vim'
 Plugin 'Valloric/MatchTagAlways'
-Plugin 'jiangmiao/auto-pairs'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'islam-taha/vim-code-dark'
 Plugin 'islam-taha/vim-react-es6-snippets'
 Plugin 'airblade/vim-gitgutter'
-Plugin 'terryma/vim-multiple-cursors'
 Plugin 'w0rp/ale'
 
 call vundle#end()
@@ -104,13 +102,12 @@ set ttimeout
 set ttimeoutlen=1
 set list
 set listchars=eol:¬,tab:>.,trail:~,extends:>,precedes:<
-set shortmess+=T
+set shortmess+=at
 " set cmdheight=2
-set listchars
 set path+=**
 set synmaxcol=200
 set nocursorline
-" set paste
+set paste
 set nocursorcolumn
 syntax sync minlines=256
 " =============================================================
@@ -146,18 +143,12 @@ vnoremap <c-t> <ESC>
 
 " insert mode
 imap <c-e> <esc>A
-" imap <c-c>:call multiple_cursors#quit()<cr>:call clearmatches()<cr>
 
 " Quick open most used files
 nnoremap <leader>em :!open -a 'Marked 2.app' '%:p'<cr>
 nnoremap <leader>ev :tabnew ~/.vimrc<cr>
 nnoremap <leader>es :split<cr>:UltiSnipsEdit<cr>
 nnoremap <leader>eN :split<cr>:e ~/Dropbox/Content/notes.md<cr>
-
-function! MapCR()
-  nnoremap <cr> :nohlsearch<cr>:call clearmatches()<cr>
-endfunction
-call MapCR()
 
 " augroup highlight
 "   " Remove ALL autocommands for the current group.
@@ -176,7 +167,7 @@ call MapCR()
 "   autocmd BufEnter * highlight OverLength ctermbg=darkgrey guibg=#111111
 "   autocmd BufEnter * match OverLength /\%>100v.\+/
 " augroup END
-"
+
 map gn :bn<cr>
 map gp :bp<cr>
 map <s-w> :BD<cr>
@@ -224,44 +215,6 @@ cnoremap $m <CR>:m''<CR>
 cnoremap $M <CR>:M''<CR>
 cnoremap $d <CR>:d<CR>``
 
-" multiedit
-" Insert a disposable marker after the cursor
-nmap <leader>ma :MultieditAddMark a<CR>
-
-" Insert a disposable marker before the cursor
-nmap <leader>mi :MultieditAddMark i<CR>
-
-" Make a new line and insert a marker
-nmap <leader>mo o<Esc>:MultieditAddMark i<CR>
-nmap <leader>mO O<Esc>:MultieditAddMark i<CR>
-
-" Insert a marker at the end/start of a line
-nmap <leader>mA $:MultieditAddMark a<CR>
-nmap <leader>mI ^:MultieditAddMark i<CR>
-
-" Make the current selection/word an edit region
-vmap <leader>m :MultieditAddRegion<CR>
-nmap <leader>mm viw:MultieditAddRegion<CR>
-
-" Restore the regions from a previous edit session
-nmap <leader>mu :MultieditRestore<CR>
-
-" Move cursor between regions n times
-map ]m :MultieditHop 1<CR>
-map [m :MultieditHop -1<CR>
-
-" Start editing!
-nmap <leader>M :Multiedit<CR>
-
-" Clear the word and start editing
-nmap <leader>C :Multiedit!<CR>
-
-" Unset the region under the cursor
-nmap <silent> <leader>md :MultieditClear<CR>
-
-" Unset all regions
-nmap <silent> <leader>mr :MultieditReset<CR>
-
 " saves cursor after yanking in visual mode
 vnoremap y myy`y
 vnoremap Y myY`y
@@ -286,20 +239,6 @@ let g:test#javascript#mocha#options = {
 
 " autocmd BufWinLeave .* mkview
 " autocmd BufWinEnter .* silent loadview
-
-" Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 0
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_quiet_messages = { 'level': 'warnings' }
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_ruby_checkers = ['rubocop', 'mri']
-let g:syntastic_ruby_rubocop_exec = '/usr/local/var/rbenv/shims/rubocop'
 
 " vim-sessions
 let g:session_default_overwrite = 1
@@ -378,6 +317,7 @@ let g:ycm_path_to_python_interpreter = '/usr/bin/python'
 " After this is configured, :ALEFix will try and fix your JS code with ESLint.
 let g:ale_fixers = {
 \   'javascript': ['eslint'],
+\   'typescript': ['tslint'],
 \   'ruby': ['rubocop'],
 \}
 
