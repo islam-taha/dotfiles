@@ -51,8 +51,8 @@ antigen bundle heroku
 if [ -n "$INSIDE_EMACS" ]; then
   antigen theme miloshadzic
 else
-  antigen theme miloshadzic
-  # source ~/powerline9k.sh
+  # antigen theme miloshadzic
+  source ~/powerline9k.sh
 fi
 
 antigen apply
@@ -108,3 +108,16 @@ alias be="bundle exec"
 ## begin custom scrips ##
 source ~/.sup_env
 ## end ##
+
+## begin ionic android ##
+# Create a JAVA_HOME variable, determined dynamically
+export JAVA_HOME=$(/usr/libexec/java_home)
+export PATH=${JAVA_HOME}/bin:$PATH
+export ANDROID_HOME=~/Library/Android/sdk/
+export PATH=$ANDROID_HOME/platform-tools:$PATH
+export PATH=$ANDROID_HOME/tools:$PATH
+export GRADLE_HOME=/Library/gradle/gradle-3.2
+export PATH=$PATH:$GRADLE_HOME/bin
+## end ##
+
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'

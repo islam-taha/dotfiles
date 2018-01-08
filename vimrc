@@ -25,7 +25,6 @@ Plugin 'mileszs/ack.vim'
 Plugin 'sjl/gundo.vim'
 Plugin 'qpkorr/vim-bufkill'
 Plugin 'sheerun/vim-polyglot'
-Plugin 'dracula/vim'
 Plugin 'leafgarland/typescript-vim'
 Plugin 'Valloric/MatchTagAlways'
 Plugin 'tomtom/tcomment_vim'
@@ -33,22 +32,12 @@ Plugin 'islam-taha/vim-code-dark'
 Plugin 'islam-taha/vim-react-es6-snippets'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'w0rp/ale'
+Plugin 'acarl005/vim-gotham'
+Plugin 'dracula/vim'
+Plugin 'marciomazza/vim-brogrammer-theme'
 
 call vundle#end()
 filetype plugin indent on
-
-if &t_Co >= 256
-  colorscheme dracula
-endif
-
-if has("gui_running")
-    colorscheme codedark
-endif
-
-if &t_Co > 2 || has("gui_running")
-    " switch syntax highlighting on, when the terminal has colors
-    syntax on
-endif
 
 runtime macros/matchit.vim
 
@@ -264,11 +253,21 @@ omap s <Plug>(easymotion-bd-t)
 vmap s <Plug>(easymotion-bd-t)
 
 " Airline
+if &t_Co >= 256
+  colorscheme brogrammer
+endif
+
+if &t_Co > 2 || has("gui_running")
+    " switch syntax highlighting on, when the terminal has colors
+    syntax on
+endif
+
 
 if has('gui_running')
-  let g:airline_theme = 'codedark'
+  let g:airline_theme = 'term'
+  colorscheme brogrammer
 else
-  let g:airline_theme='dracula'
+  let g:airline_theme='term'
 endif
 
 let g:airline#extensions#tabline#enabled = 1
@@ -293,7 +292,7 @@ let g:markdown_fenced_languages = ['coffee', 'css', 'erb=eruby', 'javascript', '
 
 " CtrlP
 let g:ctrlp_working_path_mode='a'
-set wildignore+=**/bower_components/*,**/node_modules/*,**/tmp/*,**/assets/images/*,**/assets/fonts/*,**/public/images/*
+set wildignore+=**/bower_components/*,**/node_modules/*,**/tmp/*,**/assets/images/*,**/assets/fonts/*,**/public/images/*,**/deps/*,**/_build/*
 
 " JSX
 let g:jsx_ext_required = 0
@@ -312,6 +311,7 @@ let g:mta_filetypes = {
 " remove markdown files from black list
 let g:ycm_filetype_blacklist={'notes': 1, 'unite': 1, 'tagbar': 1, 'pandoc': 1, 'qf': 1, 'vimwiki': 1, 'text': 1, 'infolog': 1, 'mail': 1}
 let g:ycm_path_to_python_interpreter = '/usr/bin/python'
+let g:ycm_min_num_of_chars_for_completion = 1
 
 " Put this in vimrc or a plugin file of your own.
 " After this is configured, :ALEFix will try and fix your JS code with ESLint.
