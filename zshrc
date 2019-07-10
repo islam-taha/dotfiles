@@ -17,10 +17,10 @@ export ALIEN_THEME="green"
 ## nvm end ##
 
 ## load rbenv ##
-rbenv() {
-  eval "$(command rbenv init -)"
-  rbenv "$@"
-}
+# rbenv() {
+#   eval "$(command rbenv init -)"
+#   rbenv "$@"
+# }
 ## end ##
 ## openssl ##
 export PATH="/usr/local/opt/openssl/bin:$PATH"
@@ -30,7 +30,7 @@ export PATH="/usr/local/opt/openssl/bin:$PATH"
 setopt auto_cd
 
 ## begin antigen ##
-source ~/antigen.zsh
+source /usr/local/share/antigen/antigen.zsh
 
 antigen use oh-my-zsh
 # antigen theme miloshadzic
@@ -41,6 +41,7 @@ antigen bundle zsh-users/zsh-history-substring-search
 antigen bundle hlissner/zsh-autopair
 antigen bundle rupa/z
 antigen bundle lukechilds/zsh-nvm
+antigen bundle thewtex/tmux-mem-cpu-load
 #
 antigen bundle command-not-found
 antigen bundle git
@@ -48,12 +49,8 @@ antigen bundle heroku
 #
 
 ## don't use powerline9k inside emacs ##
-if [ -n "$INSIDE_EMACS" ]; then
-  antigen theme miloshadzic
-else
-  # antigen theme miloshadzic
-  source ~/powerline9k.sh
-fi
+# antigen theme halfo/lambda-mod-zsh-theme
+antigen theme fino
 
 antigen apply
 ## end antigen ##
@@ -68,12 +65,9 @@ bindkey '^N' history-substring-search-down
 ## end keybindings ##
 
 ## begin exports ##
-export PATH="/Users/Tensor/.rbenv/shims:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH="/usr/bin/vendor_perl:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/snap/bin"
+export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
 export ARCHFLAGS="-arch x86_64"
-
-export RAILS_ENV=development
-export PORT=5000
-
 export NVM_DIR=$(cd ~/.nvm && pwd -P)
 ## end exports ##
 
@@ -82,13 +76,12 @@ export NVM_DIR=$(cd ~/.nvm && pwd -P)
 
 ## setup default nvm alias if inside vim
 if [ -n "$VIMRUNTIME" ]; then
-  nvm alias default 6.10.2
+  nvm alias default stable
 fi
 
 ## begin aliases ##
 alias run='g++ -std=c++11 -DDEBUG -O2'
 alias js="git status"
-alias jl="git pull origin $(git rev-parse --abbrev-ref HEAD)"
 alias jc="git checkout -b"
 alias jp="git push"
 alias ja="git checkout -- "
@@ -105,19 +98,26 @@ alias sd="bundle exec cap staging deploy && bundle exec cap staging puma:stop &&
 alias be="bundle exec"
 ## end aliases ##
 
-## begin custom scrips ##
-source ~/.sup_env
-## end ##
-
 ## begin ionic android ##
 # Create a JAVA_HOME variable, determined dynamically
-export JAVA_HOME=$(/usr/libexec/java_home)
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/
 export PATH=${JAVA_HOME}/bin:$PATH
-export ANDROID_HOME=~/Library/Android/sdk/
+# export ANDROID_HOME=/opt/android-sdk
+export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$ANDROID_HOME/platform-tools:$PATH
 export PATH=$ANDROID_HOME/tools:$PATH
-export GRADLE_HOME=/Library/gradle/gradle-3.2
+export GRADLE_HOME=$HOME/.sdkman/candidates/gradle/5.2.1/
 export PATH=$PATH:$GRADLE_HOME/bin
 ## end ##
 
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'
+export EDITOR="$(which vim)"
+
+[[ -s "$HOME/.kiex/scripts/kiex" ]] && source "$HOME/.kiex/scripts/kiex"
+
+# THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/Users/tensor/.sdkman"
+[[ -s "/Users/tensor/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/tensor/.sdkman/bin/sdkman-init.sh"
+
+export FIREFOX_BINARY_PATH="/Applications/Firefox.app/Contents/MacOS/firefox-bin"
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#797979'
+# export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'

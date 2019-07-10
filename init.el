@@ -105,8 +105,8 @@
 (add-hook 'after-init-hook #'winum-mode)
 
 ;; use system shell path
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
+;;(when (memq window-system '(mac ns x))
+  ;;(exec-path-from-shell-initialize))
 
 (setenv "PATH" (concat (getenv "PATH") ":/Users/tensor/.nvm/versions/node/v6.10.2/bin"))
 (setq exec-path (append exec-path '("/Users/tensor/.nvm/versions/node/v6.10.2/bin")))
@@ -426,7 +426,7 @@
   :group 'multi-term)
 
 ;; c/c++ configs + irony
-(require 'cc-mode)
+;;(require 'cc-mode)
 
 (cmake-ide-setup)
 
